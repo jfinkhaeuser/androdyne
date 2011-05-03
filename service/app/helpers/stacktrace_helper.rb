@@ -1,0 +1,2 @@
+module StacktraceHelper
+end

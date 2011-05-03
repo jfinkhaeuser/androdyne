@@ -10,7 +10,52 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110503150938) do
+ActiveRecord::Schema.define(:version => 20110503191448) do
+
+  create_table "log_messages", :force => true do |t|
+    t.string   "tag",           :null => false
+    t.string   "message",       :null => false
+    t.integer  "stacktrace_id", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "log_messages", ["tag", "message"], :name => "index_log_messages_on_unique", :unique => true
+
+  create_table "occurrences", :force => true do |t|
+    t.string   "phone",                        :null => false
+    t.string   "os_version",                   :null => false
+    t.integer  "count",         :default => 1, :null => false
+    t.integer  "stacktrace_id",                :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "occurrences", ["phone", "os_version"], :name => "index_occurrences_on_unique", :unique => true
+
+  create_table "packages", :force => true do |t|
+    t.string   "package_id", :null => false
+    t.string   "name",       :null => false
+    t.string   "secret",     :null => false
+    t.integer  "user_id",    :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "packages", ["package_id"], :name => "index_packages_on_package_id", :unique => true
+
+  create_table "stacktraces", :force => true do |t|
+    t.integer  "version_code", :null => false
+    t.string   "hash",         :null => false
+    t.string   "version",      :null => false
+    t.string   "trace",        :null => false
+    t.integer  "package_id",   :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "stacktraces", ["hash"], :name => "index_stacktraces_on_hash"
+  add_index "stacktraces", ["package_id", "version_code", "hash"], :name => "index_stacktraces_on_unique", :unique => true
 
   create_table "users", :force => true do |t|
     t.string   "login",             :null => false
