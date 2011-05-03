@@ -1,17 +1,20 @@
+!!! 5
 %html{html_attrs}
   %head
     %title= "Android Stacktrace #{yield(:title)}"
     %link{:rel => 'stylesheet', :href => "/stylesheets/application.css"}
 
   %body
-    #user-nav
-      - if current_user
-        = "Signed in as "
-        = link_to "#{current_user.login}", account_path(current_user)
-        = "Not you?"
-        = link_to "Sign out", logout_path
-      - else
-        = link_to "Sign in", new_user_session_path
+    #nav
+      %div
+        = link_to "Home", root_path
+      %div
+        - if current_user
+          :plain
+            Signed in as #{link_to current_user.login, account_path(current_user) }. Not you?
+          = link_to "Sign out", logout_path
+        - else
+          = link_to "Sign in", new_user_session_path
 
     #content
       = yield

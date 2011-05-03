@@ -1,8 +1,10 @@
 Service::Application.routes.draw do
   resources :user_sessions
-  match 'login' => "user_sessions#new",        :as => :login
-  match 'logout' => "user_sessions#destroy",   :as => :logout
-  match 'account/:id' => "user_sessions#show", :as => :account
+  match 'login' => "user_sessions#new",         :as => :login
+  match 'logout' => "user_sessions#destroy",    :as => :logout
+
+  resources :user
+  match 'account/:id' => "user#show",           :as => :account
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

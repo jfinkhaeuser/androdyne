@@ -1,2 +1,6 @@
-%h1 Home#index
-%p Find me in app/views/home/index.html.haml
+%h1 Home
+- if current_user
+  = "TODO"
+- else
+  :plain
+    Log in to see stacktraces collected for your Android app.

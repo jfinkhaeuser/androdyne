@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe UserSessionController do
+describe UserController do
 
   describe "GET 'show'" do
     it "should be successful" do
