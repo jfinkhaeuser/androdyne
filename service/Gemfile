@@ -19,6 +19,8 @@ gem 'sqlite3-ruby', :require => 'sqlite3'
 
 # Bundle the extra gems:
 gem 'authlogic'
+gem 'rails3-generators'
+
 # gem 'bj'
 # gem 'nokogiri'
 # gem 'sqlite3-ruby', :require => 'sqlite3'
