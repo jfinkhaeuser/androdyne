@@ -18,7 +18,7 @@ module Service
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
-    config.plugins = [ :authlogic ]
+    config.plugins = [ :dynamic_form ]
 
     # Activate observers that should always be running.
     # config.active_record.observers = :cacher, :garbage_collector, :forum_observer
@@ -39,5 +39,11 @@ module Service
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
+
+    # Generators
+    config.generators do |g|
+      g.template_engine :haml
+      g.test_framework :rspec, :fixture => true, :views => false
+    end
   end
 end
