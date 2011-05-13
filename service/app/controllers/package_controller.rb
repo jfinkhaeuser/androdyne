@@ -8,7 +8,6 @@ class PackageController < ApplicationController
 
   def new
     @package = Package.new
-    @package.secret = SecureRandom.base64(30)
   end
 
 
@@ -26,7 +25,7 @@ class PackageController < ApplicationController
     @package = current_user.packages.new(params[:package])
     if @package.save
       flash[:notice] = "Package created!"
-      redirect_back_or_default index_package_path
+      redirect_back_or_default package_index_path
     else
       render :action => :new
     end
