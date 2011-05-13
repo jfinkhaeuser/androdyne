@@ -1,7 +1,4 @@
 Service::Application.routes.draw do
-  get "package/show"
-
-  get "package/index"
 
   resources :user_sessions
   match 'login' => "user_sessions#new",         :as => :login
@@ -11,6 +8,12 @@ Service::Application.routes.draw do
   match 'account/:id' => "user#show",           :as => :account
 
   resources :package
+
+  resources :api do
+    member do
+      post 'stacktrace'
+    end
+  end
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
