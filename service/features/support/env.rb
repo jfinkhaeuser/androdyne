@@ -37,3 +37,10 @@ rescue NameError
   raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
 end
 
+# DatabaseCleaner is nice, but it cleans the seed data as well. That's not exactly
+# ideal for testing. We could create database entries here, but it's probably better
+# to re-use db/seeds.rb as much as possible.
+Before do
+  require 'db/seeds'
+  do_seeding
+end
