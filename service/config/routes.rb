@@ -1,19 +1,26 @@
 Service::Application.routes.draw do
 
-  resources :user_sessions
+  ############################################################################
+  # Login/account related
   match 'login' => "user_sessions#new",         :as => :login
   match 'logout' => "user_sessions#destroy",    :as => :logout
-
-  resources :user
   match 'account/:id' => "user#show",           :as => :account
 
+  # For posting the login form
+  match 'user_sessions/create' => "user_sessions#create"
+
+
+  ############################################################################
+  # API related
+  match 'api/stacktrace' => 'api#stacktrace'
+
+
+  ############################################################################
+  # Regular resources
+  # FIXME do we want this? We don't need the API shit, for the most part, because
+  # we define our own API controller.
   resources :package
 
-  resources :api do
-    member do
-      post 'stacktrace'
-    end
-  end
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
