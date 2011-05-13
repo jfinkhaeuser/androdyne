@@ -1,8 +1,6 @@
 module WorkaroundHelpers
-  def assert_equal(param1, param2)
-    if not param1 == param2
-      raise "Assertion failed: #{param1} == #{param2}"
-    end
+  def add_assertion
+    # This exists because using any of the assert_* functions in plain cucumber fails
   end
 end
 
