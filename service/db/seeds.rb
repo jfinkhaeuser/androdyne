@@ -7,12 +7,24 @@
 #   Mayor.create(:name => 'Daley', :city => cities.first)
 
 def do_seeding
+  # These seeds apply only to the test environment.
   if ENV['RAILS_ENV'] == "test"
-    # These seeds apply only to the test environment.
+    # Create test users
     User.create([
       { :login => 'test', :email => 'test@test.org', :password => 'test123', :password_confirmation => 'test123' },
       { :login => 'foobar', :email => 'foo@bar.org', :password => '123test', :password_confirmation => '123test' },
     ])
 
+    user = User.where(:login => 'test')
+
+    # Create test packages
+    Package.create([
+      { :user_id => user.id, :package_id => "com.test.app", :name => "Test App" },
+    ])
   end
+end
+
+# Regular rails functionality
+if File.basename($0) == "rake"
+  do_seeding
 end
