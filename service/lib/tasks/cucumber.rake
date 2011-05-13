@@ -32,6 +32,12 @@ begin
       t.profile = 'rerun'
     end
 
+    Cucumber::Rake::Task.new({:api => 'db:test:prepare'}, 'Run API tests only') do |t|
+      t.binary = vendored_cucumber_bin
+      t.fork = true
+      t.profile = 'api'
+    end
+
     desc 'Run all features'
     task :all => [:ok, :wip]
   end
