@@ -15,11 +15,11 @@ def do_seeding
       { :login => 'foobar', :email => 'foo@bar.org', :password => '123test', :password_confirmation => '123test' },
     ])
 
-    user = User.where(:login => 'test')
+    user = User.where(:login => 'test')[0]
 
     # Create test packages
     Package.create([
-      { :user_id => user.id, :package_id => "com.test.app", :name => "Test App" },
+      { :user => user, :package_id => "com.test.app", :name => "Test App" },
     ])
   end
 end
