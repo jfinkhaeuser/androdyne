@@ -33,6 +33,8 @@ gem 'sass'
 gem 'compass'
 gem 'jquery-rails'
 
+gem 'will_paginate'
+
 # gem 'bj'
 # gem 'nokogiri'
 # gem 'aws-s3', :require => 'aws/s3'
