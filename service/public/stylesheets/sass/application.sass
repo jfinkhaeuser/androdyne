@@ -42,3 +42,25 @@ a:active
 
 #content
   margin: 15px
+
+@mixin table-base
+  border: 1px solid black
+  border-collapse: collapse
+
+  thead, tfoot
+    border: 1px solid black
+    background-color: #ccc
+
+  th
+    padding: 5px
+
+  td
+    padding: 5px
+
+  a:hover
+    color: #666
+
+
+#packages
+  +table-base
+

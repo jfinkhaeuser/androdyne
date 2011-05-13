@@ -1,0 +1,21 @@
+= form_for @package, :url => { :action => "create" } do |f|
+  = f.error_messages
+  %table
+    %tr
+      %td= f.label "Name", :for => :name
+      %td= f.text_field :name
+    %tr
+      %td= f.label "Package Identifier", :for => :package_id
+      - if defined? name_only and name_only
+        %td
+          %code= @package.package_id
+          = f.hidden_field :package_id
+      - else
+        %td= f.text_field :package_id
+    %tr
+      %td= f.label "Secret", :for => :secret
+      %td
+        %code= @package.secret
+        = f.hidden_field :secret
+    %tr
+      %td{ :colspan => 2 }= f.submit "Submit"

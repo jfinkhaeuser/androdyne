@@ -1,0 +1,4 @@
+%h1= @package.name
+- @package.stacktraces.each do |s|
+  %p link_to s.hash, stacktrace_path(s)
+  - # FIXME

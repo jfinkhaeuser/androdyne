@@ -1,10 +1,16 @@
 Service::Application.routes.draw do
+  get "package/show"
+
+  get "package/index"
+
   resources :user_sessions
   match 'login' => "user_sessions#new",         :as => :login
   match 'logout' => "user_sessions#destroy",    :as => :logout
 
   resources :user
   match 'account/:id' => "user#show",           :as => :account
+
+  resources :package
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

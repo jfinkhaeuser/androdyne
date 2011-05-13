@@ -1,0 +1,25 @@
+%table#packages
+  %thead
+    %tr
+      %th= "Name"
+      %th= "Package Identifier"
+      %th= "Secret"
+      %th= "Actions"
+  %tfoot
+    - if not @packages.empty?
+      %tr
+        %th{ :colspan => 3 }= will_paginate @packages
+        %th= link_to "new package", new_package_path
+  %tbody
+    - if @packages.nil?
+      %tr
+        %td{ :colspan => 4 }= "No packages found."
+    - else
+      - @packages.each do |p|
+        %tr
+          %td= link_to p.name, package_path(p)
+          %td
+            %code= p.package_id
+          %td
+            %code= p.secret
+          %td= link_to "edit", edit_package_path(p)

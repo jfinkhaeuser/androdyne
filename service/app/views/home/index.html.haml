@@ -1,6 +1,7 @@
 %h1 Home
 - if current_user
-  = "TODO"
+  = render :partial => "package/packages"
+  = link_to "Full Package List", :controller => "package", :action => "index"
 - else
   :plain
     Log in to see stacktraces collected for your Android app.
