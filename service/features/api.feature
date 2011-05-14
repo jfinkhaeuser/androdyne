@@ -10,7 +10,25 @@ Feature: API
 
   Examples:
     | App ID        | Signature                    | HTTP Code | Response Code |
-    | com.test.app  | pPKq2YlEbRb1JhlDnpZNVGRMztQ= | 200       | 0             |
-    | unknown.app   | pPKq2YlEbRb1JhlDnpZNVGRMztQ= | 403       | 20002         |
-    |               | pPKq2YlEbRb1JhlDnpZNVGRMztQ= | 403       | 20002         |
+    | com.test.app  | 1FV6lkiANPwXT9Zm+fCdXvfWQqE= | 200       | 0             |
+    | unknown.app   | 1FV6lkiANPwXT9Zm+fCdXvfWQqE= | 403       | 20002         |
+    |               | 1FV6lkiANPwXT9Zm+fCdXvfWQqE= | 403       | 20002         |
     | com.test.app  | invalid_signature            | 403       | 20001         |
+
+
+  Scenario: Submit New Stacktrace
+    Given an app with app ID "com.test.app" submits a stacktrace
+    And the request signature is calculated to be "1FV6lkiANPwXT9Zm+fCdXvfWQqE="
+    Then the HTTP status code should be "200"
+    And the response code should be "0"
+    And the response body should contain the ID of the new stacktrace
+    And the occurrence count should be "1"
+
+
+  Scenario: Submit Duplicate Stacktrace
+    Given an app with app ID "com.test.app" submits a stacktrace
+    And the request signature is calculated to be "1FV6lkiANPwXT9Zm+fCdXvfWQqE="
+    And the app submits the same stacktrace "3" times
+    Then the response code should be "0"
+    And the response body should contain the ID of the new stacktrace
+    And the occurrence count should be "3"
