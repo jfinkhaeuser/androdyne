@@ -17,9 +17,9 @@ def do_seeding
 
     user = User.where(:login => 'test')[0]
 
-    # Create test packages
+    # Create test packages. Hardcode a secret, or tests will be harder to write.
     Package.create([
-      { :user => user, :package_id => "com.test.app", :name => "Test App" },
+      { :user => user, :package_id => "com.test.app", :name => "Test App", :secret => "GclvUdBLtXkIWjnJzN0JLrFZAnw/E1jmnXXCGQy4" },
     ])
   end
 end

@@ -7,6 +7,8 @@ class Package < ActiveRecord::Base
 private
   def generate_secret
     # When creating Package objects, generate the secret
-    self.secret = SecureRandom.base64(30)
+    if not self.secret or 0 == self.secret.length
+      self.secret = SecureRandom.base64(30)
+    end
   end
 end
