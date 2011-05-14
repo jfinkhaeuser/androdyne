@@ -11,7 +11,7 @@ class ApiController < ApplicationController
     :unknown_api_method           => [ 10003, "Unknown API method", 404 ],
 
     :invalid_signature            => [ 20001, "Invalid signature", 403 ],
-    :not_authorized               => [ 20003, "Not authorized", 403 ],
+    :not_authorized               => [ 20002, "Not authorized", 403 ],
   }
 
   @@SUPPORTED_HTTP_METHODS = {
@@ -36,11 +36,14 @@ class ApiController < ApplicationController
 
     # Check request method is valid. If we have no definitions of request
     # methods for a call, we assume all methods are permitted.
-    if @@SUPPORTED_HTTP_METHODS[api_version.to_sym] and @@SUPPORTED_HTTP_METHODS[api_version.to_sym][method.to_sym]
-      supported_methods = @@SUPPORTED_HTTP_METHODS[api_version.to_sym][method.to_sym]
-      req_method = request.method.downcase.to_sym
-      if not supported_methods.include?(req_method)
-        return api_response(:unsupported_request_method)
+    # Skip this in development mode, though.
+    if ENV['RAILS_ENV'] != 'development'
+      if @@SUPPORTED_HTTP_METHODS[api_version.to_sym] and @@SUPPORTED_HTTP_METHODS[api_version.to_sym][method.to_sym]
+        supported_methods = @@SUPPORTED_HTTP_METHODS[api_version.to_sym][method.to_sym]
+        req_method = request.method.downcase.to_sym
+        if not supported_methods.include?(req_method)
+          return api_response(:unsupported_request_method)
+        end
       end
     end
 
