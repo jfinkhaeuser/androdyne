@@ -12,7 +12,7 @@ Service::Application.routes.draw do
 
   ############################################################################
   # API related
-  match 'api/stacktrace' => 'api#stacktrace'
+  match 'api/stacktrace' => 'api#stacktrace',   :via => [ :post ]
 
 
   ############################################################################
