@@ -4,26 +4,74 @@ class ApiController < ApplicationController
   @@SUPPORTED_VERSIONS = [ "v1" ]
 
   @@ERROR_CODES = {
-    :ok                       => [     0, "ok", 200 ],
-    :unknown                  => [ 10000, "Unknown error", 500 ],
+    :ok                           => [     0, "ok", 200 ],
+    :unknown                      => [ 10000, "Unknown error", 500 ],
+    :unsupported_api_version      => [ 10001, "Unsupported API version", 500 ],
+    :unsupported_request_method   => [ 10002, "Unsupported request method", 500 ],
+    :unknown_api_method           => [ 10003, "Unknown API method", 404 ],
 
-    :invalid_signature        => [ 10001, "Invalid signature", 403 ],
-    :not_authorized           => [ 10003, "Not authorized", 403 ],
+    :invalid_signature            => [ 20001, "Invalid signature", 403 ],
+    :not_authorized               => [ 20003, "Not authorized", 403 ],
+  }
 
-#    :profile_does_not_exist   => [ 20003, "Profile does not exist", 404 ],
-#    :profile_not_specified    => [ 20004, "No profile ID given", 500 ],
-#    :missing_parameter        => [ 20005, "Missing parameter", 500 ],
-#    :testrun_does_not_exist   => [ 20006, "Specified test run does not exist", 404 ],
+  @@SUPPORTED_HTTP_METHODS = {
+    :v1 => {
+      :stacktrace => [ :post ]
+    }
   }
 
 
-  def stacktrace
+  # Checks supported API versions, and dispatches to a versioned handler
+  # method.
+  def api_version_dispatch
+    # First, version check.
+    api_version = params[:api_version]
+    if not @@SUPPORTED_VERSIONS.include?(api_version)
+      return api_response(:unsupported_api_version)
+    end
+
+    # Generate method name
+    method = params[:method].split('/')
+    method = method.join('_')
+
+    # Check request method is valid. If we have no definitions of request
+    # methods for a call, we assume all methods are permitted.
+    if @@SUPPORTED_HTTP_METHODS[api_version.to_sym] and @@SUPPORTED_HTTP_METHODS[api_version.to_sym][method.to_sym]
+      supported_methods = @@SUPPORTED_HTTP_METHODS[api_version.to_sym][method.to_sym]
+      req_method = request.method.downcase.to_sym
+      if not supported_methods.include?(req_method)
+        return api_response(:unsupported_request_method)
+      end
+    end
+
+    # Clean up params for send() to work properly
+    params.delete(:api_version)
+    params.delete(:method)
+    params[:action] = method
+
+    # Dispatch
+    begin
+      method = "#{api_version}_#{method}"
+      return send(method.to_sym)
+    rescue NoMethodError => e
+      return api_response(:unknown_api_method)
+    end
+  end
+
+private
+  ############################################################################
+  # V1 implementation
+  def v1_stacktrace
     return if is_invalid_request?(params)
+
     # FIXME
     api_response(:ok)
   end
 
-private
+
+  ############################################################################
+  # Helper functions
+
   # Format an API response
   def api_response(*args) # :nodoc:
     code = args.first
@@ -62,9 +110,9 @@ private
     # Clone parameters for creating the signature. Then remove stuff we don't
     # want to see in the signature.
     cloned = Marshal::load(Marshal.dump(params))
-    cloned.delete :controller
-    cloned.delete :action
-    cloned.delete :signature
+    cloned.delete(:controller)
+    cloned.delete(:action)
+    cloned.delete(:signature)
 
     # Check signature
     signature = create_signature(cloned, secret)
@@ -82,10 +130,12 @@ private
     digest = OpenSSL::Digest::Digest.new('sha1')
     signature = Base64.encode64s(OpenSSL::HMAC.digest(digest, secret, query))
 
-#    require 'pp'
-#    pp params
-#    pp secret
-#    pp signature
+    # require 'pp'
+    # print '----------------------------------'
+    # pp params
+    # pp query
+    # pp secret
+    # pp signature
 
     return signature
   end
