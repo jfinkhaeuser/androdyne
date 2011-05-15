@@ -61,17 +61,17 @@ Your `AndroidManifest.xml` must be modified slightly:
   Android's own. You can achieve that most easily by changing the `application`
   tag:
 
-    <application android:label="@string/app_name"
-                 android:name="org.androdyne.Application"
-        >
+      \<application android:label="@string/app_name"
+                   android:name="org.androdyne.Application"
+          >
 
 - Your app must define a meta-data file that describes how androdyne accesses
   the web service for submitting stack trace data. This must be included in
   your app's main/launcher Activity:
 
-    <meta-data android:name="org.androdyne.exception-handler"
-               android:resource="@xml/androdyne"
-        />
+      \<meta-data android:name="org.androdyne.exception-handler"
+                 android:resource="@xml/androdyne"
+          />
 
 ## Meta-data ##
 
@@ -79,12 +79,12 @@ The meta-data file can have any name, but in the example we put it in
 `res/xml/androdyne.xml` (if you want to change that, adjust the `meta-data`
 tag in your `AndroidManifest.xml` file.
 
-  <?xml version="1.0" encoding="utf-8"?>
-  \<androdyne
-       xmlns:androdyne="http://www.androdyne.org/schema/1.0"
-       androdyne:api-url="http://host.example.org/api"
-       androdyne:secret="S3kr1t"
-    />
+    <?xml version="1.0" encoding="utf-8"?>
+    \<androdyne
+         xmlns:androdyne="http://www.androdyne.org/schema/1.0"
+         androdyne:api-url="http://host.example.org/api"
+         androdyne:secret="S3kr1t"
+      />
 
 - The `api-url` attribute points to the base URL for API calls. Assuming you
   have the service running on _host.example.org_ and accessible via http, then
