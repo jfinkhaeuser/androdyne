@@ -10,15 +10,15 @@ Feature: API
 
   Examples:
     | App ID        | Signature                                | HTTP Code | Response Code |
-    | com.test.app  | d4557a96488034fc174fd666f9f09d5ef7d642a1 | 200       | 0             |
-    | unknown.app   | d4557a96488034fc174fd666f9f09d5ef7d642a1 | 403       | 20002         |
-    |               | d4557a96488034fc174fd666f9f09d5ef7d642a1 | 403       | 20002         |
+    | com.test.app  | e0755bd3e93840f8cd5ebd19d7e6ba20e0b1421c | 200       | 0             |
+    | unknown.app   | e0755bd3e93840f8cd5ebd19d7e6ba20e0b1421c | 403       | 20002         |
+    |               | e0755bd3e93840f8cd5ebd19d7e6ba20e0b1421c | 403       | 20002         |
     | com.test.app  | invalid_signature                        | 403       | 20001         |
 
 
   Scenario: Submit New Stacktrace
     Given an app with app ID "com.test.app" submits a stacktrace
-    And the request signature is calculated to be "d4557a96488034fc174fd666f9f09d5ef7d642a1"
+    And the request signature is calculated to be "e0755bd3e93840f8cd5ebd19d7e6ba20e0b1421c"
     Then the HTTP status code should be "200"
     And the response code should be "0"
     And the response body should contain the ID of the new stacktrace
@@ -27,7 +27,7 @@ Feature: API
 
   Scenario: Submit Duplicate Stacktrace
     Given an app with app ID "com.test.app" submits a stacktrace
-    And the request signature is calculated to be "d4557a96488034fc174fd666f9f09d5ef7d642a1"
+    And the request signature is calculated to be "e0755bd3e93840f8cd5ebd19d7e6ba20e0b1421c"
     And the app submits the same stacktrace "3" times
     Then the response code should be "0"
     And the response body should contain the ID of the new stacktrace
@@ -38,7 +38,7 @@ Feature: API
     Given an app with app ID "com.test.app" submits a stacktrace
     And the log tag is "TEST"
     And the log message is "Log Message"
-    And the request signature is calculated to be "6b4aab6c743055a3208e473984736e874a44f764"
+    And the request signature is calculated to be "b6e09cec919f209a34af2d9f63d9ec9ba4023918"
     Then the HTTP status code should be "200"
     And the response code should be "0"
     And the response body should contain the ID of the new stacktrace
@@ -49,7 +49,7 @@ Feature: API
     Given an app with app ID "com.test.app" submits a stacktrace
     And the log tag is "TEST"
     And the log message is "Log Message"
-    And the request signature is calculated to be "6b4aab6c743055a3208e473984736e874a44f764"
+    And the request signature is calculated to be "b6e09cec919f209a34af2d9f63d9ec9ba4023918"
     And the app submits the same stacktrace "3" times
     Then the response code should be "0"
     And the response body should contain the ID of the new stacktrace

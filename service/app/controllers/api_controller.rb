@@ -74,11 +74,13 @@ private
     # We know the package exists, so get it again.
     package = Package.where({:package_id => params[:package_id]})[0]
 
+    # Decode trace data.
+    trace_data = Base64.decode64(params[:trace])
 
     # Create a hash over the trace data. We'll use that to more quickly
     # look up a match.
     require 'digest/sha1'
-    hash = Digest::SHA1.hexdigest(params[:trace])
+    hash = Digest::SHA1.hexdigest(trace_data)
 
     # Try to find an existing/matching stack trace
     traces = Stacktrace.where({
@@ -105,7 +107,7 @@ private
             :version_code => params[:version_code],
             :hash         => hash,
             :version      => params[:version],
-            :trace        => params[:trace],
+            :trace        => trace_data,
           })
           trace.save!
         end
@@ -138,7 +140,7 @@ private
           data = {
             :stacktrace_id  => trace.id,
             :tag            => params[:tag],
-            :message        => params[:message],
+            :message        => Base64.decode64(params[:message]),
           }
           messages = LogMessage.where(data)
 
