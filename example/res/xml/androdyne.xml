@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androdyne
      xmlns:androdyne="http://www.androdyne.org/schema/1.0"
-     androdyne:api-url="http://192.168.0.3:3000/api"
+     androdyne:api-url="http://host.example.org/api"
      androdyne:secret="S3kr1t"
   />
