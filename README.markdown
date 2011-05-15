@@ -7,10 +7,11 @@ web service, and of course the web service itself to browse stack trace data.
 
 Android Market offers much the same functionality, of course, but not every app
 is published there, e.g.:
-  - Apps that are distributed only to beta testers,
-  - Apps that are deployed only in-house,
-  - Apps that are in conflict with Android Market's Terms and Conditions,
-  - etc.
+
+- Apps that are distributed only to beta testers,
+- Apps that are deployed only in-house,
+- Apps that are in conflict with Android Market's Terms and Conditions,
+- etc.
 
 If your app's users aren't particularly good at gathering debug information for
 you, androdyne might be for you.
@@ -18,7 +19,7 @@ you, androdyne might be for you.
 # License #
 
 All files in this repository are licensed under the Apache 2.0 license, which
-is included in the LICENSE file. The only exception to this is the file
+is included in the `LICENSE` file. The only exception to this is the file
 `client/src/org/androdyne/Base64.java` which was placed in the public domain by
 its author.
 
@@ -26,7 +27,7 @@ its author.
 
 - The `service` directory contains a simple [Ruby on Rails](http://www.rubyonrails.org)
   service for gathering and browsing stack trace information.
-- The `client` directory contains the sources for the client .jar file that you
+- The `client` directory contains the sources for the client `.jar` file that you
   can just drop into your project.
 - The `example` directory contains an example for how to integrate androdyne into
   your Android app.
@@ -48,7 +49,7 @@ you'll need that later.
 ## Client Library ##
 
 Drop the `androdyne.jar` file into your project's `/libs` directory. That's it
-for coding.
+for code modifications.
 
 ## Manifest ##
 
@@ -59,12 +60,15 @@ Your `AndroidManifest.xml` must be modified slightly:
 - Your app should use the `Application` class in `androdyne.jar` rather than
   Android's own. You can achieve that most easily by changing the `application`
   tag:
+
     <application android:label="@string/app_name"
                  android:name="org.androdyne.Application"
         >
+
 - Your app must define a meta-data file that describes how androdyne accesses
   the web service for submitting stack trace data. This must be included in
   your app's main/launcher Activity:
+
     <meta-data android:name="org.androdyne.exception-handler"
                android:resource="@xml/androdyne"
         />
@@ -76,7 +80,7 @@ The meta-data file can have any name, but in the example we put it in
 tag in your `AndroidManifest.xml` file.
 
   <?xml version="1.0" encoding="utf-8"?>
-  <androdyne
+  \<androdyne
        xmlns:androdyne="http://www.androdyne.org/schema/1.0"
        androdyne:api-url="http://host.example.org/api"
        androdyne:secret="S3kr1t"
