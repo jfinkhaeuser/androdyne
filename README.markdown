@@ -61,7 +61,7 @@ Your `AndroidManifest.xml` must be modified slightly:
   Android's own. You can achieve that most easily by changing the `application`
   tag:
 
-      \<application android:label="@string/app_name"
+      <application android:label="@string/app_name"
                    android:name="org.androdyne.Application"
           >
 
@@ -69,7 +69,7 @@ Your `AndroidManifest.xml` must be modified slightly:
   the web service for submitting stack trace data. This must be included in
   your app's main/launcher Activity:
 
-      \<meta-data android:name="org.androdyne.exception-handler"
+      <meta-data android:name="org.androdyne.exception-handler"
                  android:resource="@xml/androdyne"
           />
 
@@ -80,7 +80,7 @@ The meta-data file can have any name, but in the example we put it in
 tag in your `AndroidManifest.xml` file.
 
     <?xml version="1.0" encoding="utf-8"?>
-    \<androdyne
+    <androdyne
          xmlns:androdyne="http://www.androdyne.org/schema/1.0"
          androdyne:api-url="http://host.example.org/api"
          androdyne:secret="S3kr1t"
