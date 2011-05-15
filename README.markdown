@@ -59,15 +59,18 @@ Your `AndroidManifest.xml` must be modified slightly:
   stack trace data.
 - Your app should use the `Application` class in `androdyne.jar` rather than
   Android's own. You can achieve that most easily by changing the `application`
-  tag:
+  tag.
+- Your app must define a meta-data file that describes how androdyne accesses
+  the web service for submitting stack trace data. This must be included in
+  your app's main/launcher Activity:
+
+### Application Snippet ###
 
     <application android:label="@string/app_name"
                  android:name="org.androdyne.Application"
         >
 
-- Your app must define a meta-data file that describes how androdyne accesses
-  the web service for submitting stack trace data. This must be included in
-  your app's main/launcher Activity:
+### Meta-Data Snippet ###
 
     <meta-data android:name="org.androdyne.exception-handler"
                android:resource="@xml/androdyne"
