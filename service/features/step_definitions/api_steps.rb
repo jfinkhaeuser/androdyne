@@ -15,6 +15,16 @@ Given /^the request signature is calculated to be "([^"]*)"$/ do |sig|
 end
 
 
+Given /^the log tag is "([^"]*)"$/ do |tag|
+  @params[:tag] = tag
+end
+
+
+Given /^the log message is "([^"]*)"$/ do |message|
+  @params[:message] = message
+end
+
+
 Given /^the app submits the same stacktrace "([^"]*)" times$/ do |count|
   count.to_i.times { |i|
     @response = post("/api/v1/stacktrace", @params)

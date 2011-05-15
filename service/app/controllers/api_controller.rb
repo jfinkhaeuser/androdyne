@@ -1,4 +1,6 @@
 class ApiController < ApplicationController
+  skip_before_filter :verify_authenticity_token
+
   @@CURRENT_VERSION = "v1"
 
   @@SUPPORTED_VERSIONS = [ "v1" ]
@@ -90,64 +92,66 @@ private
       trace = traces[0]
     end
 
-    # If we haven't got a trace yet, create one. It's fine to save it
-    # immediately; without adding an occurrence, it won't be counted in
-    # the UI.
-    if trace.nil?
-      trace = Stacktrace.new({
-        :package_id   => package.id,
-        :version_code => params[:version_code],
-        :hash         => hash,
-        :version      => params[:version],
-        :trace        => params[:trace],
-      })
-      if not trace.save
-        return api_response(:write_error)
-      end
-    end
-
-    # Now that we've got a stacktrace, look for occurrences with the
-    # given phone and os version.
-    data = {
-      :stacktrace_id  => trace.id,
-      :phone          => params[:phone],
-      :os_version     => params[:os_version],
-    }
-    occurrences = Occurrence.where(data)
-
+    # All DB access is wrapped into a transaction.
     occurrence = nil
-    if occurrences.length > 0:
-      occurrence = occurrences[0]
-    end
-
-    # Again, if we've found no occurrence, create it.
-    if occurrence.nil?
-      occurrence = Occurrence.new(data)
-    else
-      # Update the occurrence count.
-      occurrence.count += 1
-    end
-
-    if not occurrence.save
-      return api_response(:write_error)
-    end
-
-    # Finally, if part of the parameters include a log message, we'll
-    # want to save that, too.
-    if params[:tag] and params[:message]
-      data = {
-        :stacktrace_id  => trace.id,
-        :tag            => params[:tag],
-        :message        => params[:message],
-      }
-      messages = LogMessage.where(data)
-
-      if messages.length <= 0
-        message = LogMessage.new(data)
-        if not message.save
-          return api_response(:write_error)
+    begin
+      Stacktrace.transaction do
+        # If we haven't got a trace yet, create one. It's fine to save it
+        # immediately; without adding an occurrence, it won't be counted in
+        # the UI.
+        if trace.nil?
+          trace = Stacktrace.new({
+            :package_id   => package.id,
+            :version_code => params[:version_code],
+            :hash         => hash,
+            :version      => params[:version],
+            :trace        => params[:trace],
+          })
+          trace.save!
         end
-      end
+
+        # Now that we've got a stacktrace, look for occurrences with the
+        # given phone and os version.
+        data = {
+          :stacktrace_id  => trace.id,
+          :phone          => params[:phone],
+          :os_version     => params[:os_version],
+        }
+        occurrences = Occurrence.where(data)
+
+        if occurrences.length > 0:
+          occurrence = occurrences[0]
+        end
+
+        # Again, if we've found no occurrence, create it.
+        if occurrence.nil?
+          occurrence = Occurrence.new(data)
+        else
+          # Update the occurrence count.
+          occurrence.count += 1
+        end
+        occurrence.save!
+
+        # Finally, if part of the parameters include a log message, we'll
+        # want to save that, too.
+        if params[:tag] and params[:message]
+          data = {
+            :stacktrace_id  => trace.id,
+            :tag            => params[:tag],
+            :message        => params[:message],
+          }
+          messages = LogMessage.where(data)
+
+          if messages.length <= 0
+            message = LogMessage.new(data)
+            message.save!
+          end
+        end
+
+      end # transaction end
+
+    rescue ActiveRecord::RecordNotSaved => e
+      return api_response(:write_error)
     end
 
     # Send the trace ID and occurrence count in responce.
@@ -217,7 +221,7 @@ private
 
     require 'openssl'
     digest = OpenSSL::Digest::Digest.new('sha1')
-    signature = Base64.encode64s(OpenSSL::HMAC.digest(digest, secret, query))
+    signature = OpenSSL::HMAC.hexdigest(digest, secret, query)
 
     # require 'pp'
     # print '----------------------------------'

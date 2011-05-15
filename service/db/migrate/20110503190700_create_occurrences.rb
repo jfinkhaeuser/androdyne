@@ -14,7 +14,7 @@ class CreateOccurrences < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index :occurrences, ["phone", "os_version"], :name => "index_occurrences_on_unique", :unique => true
+    add_index :occurrences, ["stacktrace_id", "phone", "os_version"], :name => "index_occurrences_on_unique", :unique => true
   end
 
   def self.down

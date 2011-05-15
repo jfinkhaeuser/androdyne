@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(:version => 20110503191448) do
     t.datetime "updated_at"
   end
 
-  add_index "occurrences", ["phone", "os_version"], :name => "index_occurrences_on_unique", :unique => true
+  add_index "occurrences", ["stacktrace_id", "phone", "os_version"], :name => "index_occurrences_on_unique", :unique => true
 
   create_table "packages", :force => true do |t|
     t.string   "package_id", :null => false

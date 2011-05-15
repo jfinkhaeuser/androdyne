@@ -1,5 +1,4 @@
 class Occurrence < ActiveRecord::Base
   belongs_to :stacktrace
-#FIXME see other models
-  validates_uniqueness_of :phone, :scope => [:os_version]
+  validates_uniqueness_of :phone, :scope => [:stacktrace_id, :os_version]
 end
