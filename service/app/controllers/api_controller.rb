@@ -57,11 +57,18 @@ class ApiController < ApplicationController
     params[:action] = method
 
     # Dispatch
-    begin
-      method = "#{api_version}_#{method}"
-      return send(method.to_sym)
-    rescue NoMethodError => e
+    method = "#{api_version}_#{method}"
+    if not respond_to?(method.to_sym, true)
       return api_response(:unknown_api_method)
+    end
+
+    begin
+      return send(method.to_sym)
+    rescue => e
+      require 'pp'
+      pp e.inspect
+      pp e.backtrace
+      return api_response(:unknown_error)
     end
   end
 
@@ -85,8 +92,8 @@ private
     # Try to find an existing/matching stack trace
     traces = Stacktrace.where({
       :package_id   => package.id,
-      :version_code => params[:version_code],
-      :hash         => hash,
+      :version_code => params[:version_code].to_i,
+      :trace_hash   => hash,
     })
 
     trace = nil
@@ -104,8 +111,8 @@ private
         if trace.nil?
           trace = Stacktrace.new({
             :package_id   => package.id,
-            :version_code => params[:version_code],
-            :hash         => hash,
+            :version_code => params[:version_code].to_i,
+            :trace_hash   => hash,
             :version      => params[:version],
             :trace        => trace_data,
           })
@@ -121,16 +128,11 @@ private
         }
         occurrences = Occurrence.where(data)
 
-        if occurrences.length > 0:
+        if occurrences.length > 0
           occurrence = occurrences[0]
-        end
-
-        # Again, if we've found no occurrence, create it.
-        if occurrence.nil?
-          occurrence = Occurrence.new(data)
-        else
-          # Update the occurrence count.
           occurrence.count += 1
+        else
+          occurrence = Occurrence.new(data)
         end
         occurrence.save!
 
@@ -138,16 +140,23 @@ private
         # want to save that, too.
         if params[:tag] and params[:message]
           data = {
-            :stacktrace_id  => trace.id,
             :tag            => params[:tag],
             :message        => Base64.decode64(params[:message]),
           }
           messages = LogMessage.where(data)
 
-          if messages.length <= 0
+          if messages.length > 0
+            message = messages[0]
+          else
             message = LogMessage.new(data)
-            message.save!
           end
+
+          # Now link the log message to the occurrence.
+          if !message.occurrences.include?(occurrence)
+            message.occurrences << occurrence
+          end
+
+          message.save!
         end
 
       end # transaction end

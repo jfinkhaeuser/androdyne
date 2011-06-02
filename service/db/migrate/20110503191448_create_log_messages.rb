@@ -5,9 +5,6 @@ class CreateLogMessages < ActiveRecord::Migration
       t.string  :tag,             :null => false
       t.string  :message,         :null => false
 
-      # Foreign key
-      t.integer :stacktrace_id,   :null => false
-
       t.timestamps
     end
 
