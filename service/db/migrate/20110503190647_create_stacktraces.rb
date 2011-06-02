@@ -3,7 +3,7 @@ class CreateStacktraces < ActiveRecord::Migration
     create_table :stacktraces do |t|
       # Identifying information
       t.integer :version_code,    :null => false
-      t.string  :hash,            :null => false
+      t.string  :trace_hash,      :null => false
 
       # Display information
       t.string  :version,         :null => false
@@ -15,8 +15,8 @@ class CreateStacktraces < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index :stacktraces, ["hash"], :name => "index_stacktraces_on_hash"
-    add_index :stacktraces, ["package_id", "version_code", "hash"], :name => "index_stacktraces_on_unique", :unique => true
+    add_index :stacktraces, ["trace_hash"], :name => "index_stacktraces_on_hash"
+    add_index :stacktraces, ["package_id", "version_code", "trace_hash"], :name => "index_stacktraces_on_unique", :unique => true
   end
 
   def self.down
