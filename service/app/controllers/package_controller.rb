@@ -18,6 +18,29 @@ class PackageController < ApplicationController
 
   def show
     @package = current_user.packages.find(params[:id])
+
+    groups = @package.stacktraces.sum(
+        'occurrences.count',
+        :include => [ :occurrences ],
+        :group => :version_code
+    )
+
+    @trace_groups = {}
+    groups.each do |key|
+      version_code = key[0]
+      group = {
+        :version_code => version_code,
+        :count => key[1],
+      }
+
+      traces = @package.stacktraces.where(:version_code => version_code)
+      group[:stacktraces] = traces
+      group[:package_id] = traces[0].package_id
+
+      @trace_groups[traces[0].version] = group
+    end
+
+    pp @trace_groups
   end
 
 

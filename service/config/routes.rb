@@ -17,9 +17,12 @@ Service::Application.routes.draw do
 
   ############################################################################
   # Regular resources
-  # FIXME do we want this? We don't need the API shit, for the most part, because
-  # we define our own API controller.
-  resources :package
+  resources :package do
+    resources :stacktrace do
+      resources :occurrence
+      resources :log_message
+    end
+  end
 
 
   # The priority is based upon order of creation:

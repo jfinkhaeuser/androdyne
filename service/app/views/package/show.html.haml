@@ -1,4 +1,34 @@
 %h1= @package.name
-- @package.stacktraces.each do |s|
-  %p link_to s.hash, stacktrace_path(s)
-  - # FIXME
+
+- if @package.stacktraces.nil?
+  %div= "No stacktraces found."
+- else
+  - @trace_groups.keys.sort.reverse.each do |version|
+    - group = @trace_groups[version]
+    %table#traces
+      %thead
+        %tr
+          %td{:colspan => 3}= "Package Version"
+          %td{:class => "border-right"}= version
+          %td= "Version Code"
+          %td{:class => "border-right"}= group[:version_code]
+          %td= "Total"
+          %td{:class => "right"}= group[:count]
+      %tbody
+        - group[:stacktraces].each do |trace|
+          %tr{:class => "trace"}
+            %td{:colspan => 2}= "Trace ID"
+            %td{:colspan => 4}= link_to trace.trace_hash, package_stacktrace_path(group[:package_id], trace)
+            %td{:colspan => 2}= ""
+          %tr{:class => "phone-header"}
+            %td{:class => "spacer"}= ""
+            %td{:colspan => 2}= "Phone"
+            %td{:colspan => 1}= "OS Version"
+            %td{:colspan => 4}= ""
+          - trace.occurrences.each do |occurrence|
+            %tr
+              %td= ""
+              %td{:colspan => 2}= occurrence.phone
+              %td= occurrence.os_version
+              %td{:colspan => 3}= ""
+              %td{:class => "right"}= occurrence.count

@@ -1,2 +1,28 @@
-%h1 Stacktrace#show
-%p Find me in app/views/stacktrace/show.html.haml
+%h1= "#{@package.name} - #{@trace.trace_hash}"
+
+%table#trace-details
+  %thead
+    %tr
+      %td{:colspan => 2}= "Phone"
+      %td= "OS Version"
+      %td= "Count"
+  %tbody
+    - @trace.occurrences.each do |occurrence|
+      %tr{:class => "phone-header"}
+        %td{:colspan => 2}= occurrence.phone
+        %td= occurrence.os_version
+        %td= occurrence.count
+      -if not occurrence.log_messages.empty?
+        %tr{:class => "log-header"}
+          %td{:class => "spacer"}= ""
+          %td= "Tag"
+          %td{:colspan => 2}= "Log Message"
+        - occurrence.log_messages.each do |message|
+          %tr
+            %td= ""
+            %td= message.tag
+            %td{:colspan => 2}= message.message
+
+
+%h2= "Stacktrace for #{@trace.trace_hash}"
+%pre= @trace.trace

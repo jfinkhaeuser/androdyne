@@ -49,7 +49,7 @@ a:active
 
   thead, tfoot
     border: 1px solid black
-    background-color: #ccc
+    background-color: #bbb
 
   th
     padding: 5px
@@ -61,6 +61,54 @@ a:active
     color: #666
 
 
+.left
+  text-align: left
+
+.right
+  text-align: right
+
+.center
+  text-align: center
+
+
 #packages
   +table-base
+
+#traces
+  +table-base
+
+  width: 35%
+  margin-bottom: 25px
+
+  .trace
+    background-color: #ccc
+    border-top: 1px solid black
+
+  .phone-header
+    background-color: #ddd
+    border-top: 1px solid #bbb
+    border-bottom: 1px solid #bbb
+
+  .border-right
+    border-right: 1px solid black
+    text-align: right
+
+  .spacer
+    width: 25px
+
+#trace-details
+  +table-base
+
+  width: 35%
+
+  .phone-header
+    background-color: #ccc
+
+  .log-header
+    background-color: #ddd
+    border-top: 1px solid #bbb
+    border-bottom: 1px solid #bbb
+
+  .spacer
+    width: 25px
 
