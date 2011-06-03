@@ -39,8 +39,6 @@ class PackageController < ApplicationController
 
       @trace_groups[traces[0].version] = group
     end
-
-    pp @trace_groups
   end
 
 
