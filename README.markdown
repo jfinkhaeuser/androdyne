@@ -104,7 +104,7 @@ it'll delete any trace files already submitted.
 
 Sometimes it can be useful to get a stack trace deliberately; most often that's
 the case when you've encountered an error. It's entirely possible for you to
-use `ExceptionHandler.writeStackTrace()` manually, just pass in a new
+use `ExceptionHandler.writeStacktrace()` manually, just pass in a new
 `Throwable` object. You can also pass in a log tag and message, for further
 information - both will be submitted to the service.
 
