@@ -97,7 +97,7 @@ private
     })
 
     trace = nil
-    if traces.length > 0:
+    if traces.length > 0
       trace = traces[0]
     end
 
